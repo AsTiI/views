@@ -20,12 +20,21 @@
     display: flex;
     gap: 10px;
 }
+.imageViewWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#imageView{
+    width: 200px;
+}
 #btnId{
     width: 100px;
     height: 20px;
 }
 .allData{
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     gap: 10px;
 }

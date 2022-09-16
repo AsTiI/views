@@ -19,17 +19,92 @@ const viewsArr = [
                 female: 'female'
             }
         }
+    },
+    {
+        imageView: {
+            type: 'image',
+            id: 'imageView',
+            name: 'imageView',
+            src: 'https://hypeava.ru/uploads/posts/2018-04/1523898769_1.gif'
+        }
     }
-    // ,
-    // {
-    //     imageView: {
-    //         type: 'image',
-    //         id: 'imageView',
-    //         name: 'imageView',
-    //         src: 'https://hypeava.ru/uploads/posts/2018-04/1523898769_1.gif'
-    //     }
-    // }
 ]
+
+class ImageView{
+
+    constructor(parent, view) {
+        for(let key in view){
+            this.id  = key;
+            this.name = view[key].name;
+            this.src = view[key].src;
+        }
+        const div = document.createElement('div');
+        parent.append(div);
+
+        div.className = 'imageViewWrapper'
+
+        this.node = div;
+        this.image = this.createInput('image', this.id, this.name, this.src);
+        div.append(this.image);
+
+        const divBtn = document.createElement('divBtn');
+        div.prepend(divBtn);
+
+        divBtn.className = 'imageBtns';
+
+        const inputUploadImg = this.createInput('file', 'file', 'file');
+
+        divBtn.append(inputUploadImg);
+
+        inputUploadImg.onchange = () => {
+            let preview = this.image;
+            let file = inputUploadImg.files[0];
+            let reader = new FileReader(file);
+
+            reader.onloadend = () => {
+                this.src = reader.result;
+                preview.src = reader.result;
+            }
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = this.src;
+            }
+        }
+    }
+
+    getImage(){
+        return this.image;
+    }
+
+    createBtn(){
+        const newBtn = document.createElement('a');
+        newBtn.setAttribute('href', 'https://bipbap.ru/wp-content/uploads/2018/06/3c980dd2e9c909ada7377cc89885231b.jpg')
+        newBtn.setAttribute('download', '')
+        newBtn.textContent = 'download img';
+        newBtn.className = 'downloadImg';
+
+        return newBtn
+    }
+
+    getResult(){
+        return this.image;
+    }
+
+    destroy(){
+        this.node.remove();
+    }
+
+    createInput(type, id, name, src){
+        const input = document.createElement('input');
+        input.setAttribute('type', type);
+        input.setAttribute('id', id);
+        input.setAttribute('name', name);
+        input.setAttribute('src',src);
+        return input;
+    }
+}
+
 class RadioView{
     /**
      *
@@ -75,9 +150,9 @@ class RadioView{
     getResult(){
         for(let i = 0; i < 2; i++){
             if(this.radioBtn[i].checked == true)
-                return this.radioBtn[i].value;
+                return this.createP(this.radioBtn[i].value);
         }
-        return 'animal';
+        return this.createP('animal');
     }
 
     /**
@@ -161,7 +236,7 @@ class TextView{
         div.append(this.textInput);
     }
     getResult(){
-        return this.textInput.value
+        return this.createP(this.textInput.value)
     }
 
     /**
@@ -175,6 +250,11 @@ class TextView{
         label.setAttribute('for', name);
         label.textContent = text;
         return label;
+    }
+    createP(text){
+        const p = document.createElement('p');
+        p.textContent = text;
+        return p;
     }
 
     /**
@@ -252,14 +332,18 @@ class NextViewBtn{
 
 function showAllData (result, parent){
     const div = document.createElement('div');
-    parent.append(div);
-
     div.className = 'allData';
 
+    parent.append(div);
+
+    const h1 = document.createElement('h1');
+    h1.textContent = 'Your profile';
+    div.append(h1)
+
+
     result.map(el => {
-        const data = document.createElement('div');
-        data.textContent = el;
-        div.append(data);
+        div.append(el)
+
     })
 }
 
@@ -279,6 +363,9 @@ function startCreateProfile(parent, views){
                 case 'radio':
                     view = new RadioView(div, views[res.length]);
                     break;
+                case 'image':
+                    view = new ImageView(div, views[res.length]);
+                    break;
                 default:
                     console.log('wtfMan?');
             }
@@ -286,7 +373,7 @@ function startCreateProfile(parent, views){
         nextViewBtn.onClose = (result) => {
             const newRes = [...res, result];
             if(res.length == views.length - 1){
-                showAllData(newRes, parent);
+                showAllData(newRes, div);
             }
             else {
                 forEach(showAllData, newRes);
