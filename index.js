@@ -293,7 +293,6 @@ class NextViewBtn{
         parent.append(this.nextViewBtn);
         this.node = this.nextViewBtn;
         this.nextViewBtn.onclick = () => {
-            // func();
             this.onClose?.(valueView());
             destroyView()
             this.destroyBtn();
@@ -329,7 +328,14 @@ class NextViewBtn{
  * @param {HTMLBodyElement} parent
  * @param {Array} views
  */
+function newInputBtn(){
+    const newBtn = document.createElement('input');
+    newBtn.setAttribute('type','button');
+    newBtn.setAttribute('id','btnId');
+    newBtn.setAttribute('value', 'New Profile');
+    return newBtn;
 
+}
 function showAllData (result, parent){
     const div = document.createElement('div');
     div.className = 'allData';
@@ -340,11 +346,15 @@ function showAllData (result, parent){
     h1.textContent = 'Your profile';
     div.append(h1)
 
-
     result.map(el => {
         div.append(el)
-
     })
+    const btn = newInputBtn(div)
+    div.append(btn)
+    btn.onclick = () => {
+        parent.remove();
+        startCreateProfile(document.body, viewsArr);
+    }
 }
 
 function startCreateProfile(parent, views){
