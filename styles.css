@@ -3,3 +3,29 @@
     padding: 0;
     box-sizing: border-box;
 }
+.container{
+    padding-top: 100px;
+    gap: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.textViewWrapper{
+    display: flex;
+    flex-direction: column;
+}
+.radioWrapper{
+    padding-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+#btnId{
+    width: 100px;
+    height: 20px;
+}
+.allData{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
